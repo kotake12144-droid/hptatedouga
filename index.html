@@ -1142,9 +1142,9 @@
           </div>
         </div>
         <div class="contact-form-wrap">
-          <form class="contact-form" action="#" method="post">
+          <form class="contact-form" id="contact-form" action="#" method="post">
             <div class="form-group">
-              <input type="text" name="company" placeholder="会社名" class="form-input">
+              <input type="text" name="company" placeholder="会社名 *" required class="form-input">
             </div>
             <div class="form-group">
               <input type="text" name="name" placeholder="お名前 *" required class="form-input">
@@ -1153,11 +1153,11 @@
               <input type="email" name="email" placeholder="メールアドレス *" required class="form-input">
             </div>
             <div class="form-group">
-              <input type="tel" name="tel" placeholder="電話番号" class="form-input">
+              <input type="tel" name="tel" placeholder="電話番号 *" required class="form-input">
             </div>
             <div class="form-group">
-              <select name="type" class="form-input">
-                <option value="">ご相談内容を選択</option>
+              <select name="type" required class="form-input">
+                <option value="">ご相談内容を選択 *</option>
                 <option value="ai-gen">AI動画生成で制作したい</option>
                 <option value="ai-hybrid">AI×実写のハイブリッド制作</option>
                 <option value="ai-sns">AI×SNS広告動画</option>
@@ -1167,9 +1167,9 @@
               </select>
             </div>
             <div class="form-group">
-              <textarea name="message" id="message-textarea" placeholder="お問い合わせ内容" rows="4" class="form-input"></textarea>
+              <textarea name="message" id="message-textarea" placeholder="お問い合わせ内容 *" rows="4" required class="form-input"></textarea>
             </div>
-            <a href="inquiry.html" class="btn btn-primary btn-full" style="display:block;text-align:center;">無料で相談する</a>
+            <button type="submit" id="contact-submit" class="btn btn-primary btn-full">無料で相談する</button>
           </form>
         </div>
       </div>
@@ -1242,6 +1242,54 @@
   <script src="js/firebase-db.js"></script>
   <script src="js/main.js"></script>
   <script>
+    // ========== CONTACTフォーム送信 ==========
+    const contactForm = document.getElementById('contact-form');
+    const contactSubmit = document.getElementById('contact-submit');
+
+    if (contactForm) {
+      contactForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        contactSubmit.disabled = true;
+        contactSubmit.textContent = '送信中...';
+
+        const formData = new FormData(contactForm);
+        const typeLabels = {
+          'ai-gen':    'AI動画生成で制作したい',
+          'ai-hybrid': 'AI×実写のハイブリッド制作',
+          'ai-sns':    'AI×SNS広告動画',
+          'ai-consult':'AI動画の内製化支援',
+          'ai-cost':   'まずは費用感を知りたい',
+          'other':     'その他'
+        };
+        const body = {
+          category: typeLabels[formData.get('type')] || formData.get('type') || 'その他',
+          name:     formData.get('name'),
+          company:  formData.get('company'),
+          email:    formData.get('email'),
+          phone:    formData.get('tel'),
+          message:  formData.get('message')
+        };
+
+        try {
+          const res = await fetch('/api/contact', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+          });
+          if (!res.ok) throw new Error('server error');
+          contactForm.innerHTML = `
+            <div style="text-align:center;padding:3rem 1rem;">
+              <p style="font-size:1.5rem;font-weight:700;margin-bottom:1rem;color:#fff;">✓ 送信完了</p>
+              <p style="color:#aaa;line-height:1.8;">お問い合わせありがとうございます。<br>担当者より1営業日以内にご連絡いたします。</p>
+            </div>`;
+        } catch (err) {
+          contactSubmit.disabled = false;
+          contactSubmit.textContent = '無料で相談する';
+          alert('送信に失敗しました。お手数ですが ai@tatedouga.jp まで直接ご連絡ください。');
+        }
+      });
+    }
+
     // FAQ アコーディオン
     document.querySelectorAll('.faq-question').forEach(btn => {
       btn.addEventListener('click', () => {
