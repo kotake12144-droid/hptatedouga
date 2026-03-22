@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="work-info">
           <span class="work-category-tag">${CATEGORIES[w.category] || w.category}</span>
           <h3 class="work-title">${escapeHtml(w.title)}</h3>
-          <p class="work-client">${escapeHtml(w.client || '')}</p>
+          ${w.description ? `<p class="work-desc">${escapeHtml(w.description.length > 70 ? w.description.slice(0, 70) + '…' : w.description)}</p>` : ''}
         </div>
       </div>
     `}).join('');
@@ -431,7 +431,6 @@ document.addEventListener('DOMContentLoaded', () => {
               <div class="work-detail-related-info">
                 <span class="work-category-tag">${CATEGORIES[r.category] || r.category}</span>
                 <h3 class="work-title">${escapeHtml(r.title)}</h3>
-                <p class="work-client">${escapeHtml(r.client || '')}</p>
               </div>
             </div>`;
           }).join('')}

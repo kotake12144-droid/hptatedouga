@@ -672,6 +672,16 @@ input, textarea, select { font-family: inherit; font-size: inherit; }
 .work-client {
   font-size: 0.85rem; color: var(--gray-300);
 }
+.work-desc {
+  font-size: 0.82rem;
+  color: var(--gray-300);
+  line-height: 1.7;
+  margin-top: 6px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 
 .works-back { margin-bottom: 24px; }
 .works-back-link {
