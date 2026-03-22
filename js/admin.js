@@ -4,7 +4,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  // ============ DATA LAYER (localStorage) ============
+  // ============ DATA LAYER (Firestore via DB) ============
   const KEYS = {
     works: 'td_works',
     news: 'td_news',
@@ -38,15 +38,15 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function getData(key) {
-    try { return JSON.parse(localStorage.getItem(key)) || []; }
-    catch { return []; }
+    if (key === KEYS.settings) return DB.getSettings();
+    return DB.get(key.replace('td_', ''));
   }
   function setData(key, data) {
-    localStorage.setItem(key, JSON.stringify(data));
+    if (key === KEYS.settings) DB.setSettings(data);
+    else DB.set(key.replace('td_', ''), data);
   }
   function getSettings() {
-    try { return JSON.parse(localStorage.getItem(KEYS.settings)) || {}; }
-    catch { return {}; }
+    return DB.getSettings();
   }
 
   // Initialize with sample data if empty
@@ -70,9 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
       ]);
     }
   }
-  initSampleData();
-
-  // ============ CATEGORY MAP (localStorage) ============
+  // ============ CATEGORY MAP (Firestore) ============
   const DEFAULT_CATEGORIES = [
     { key: 'corporate', label: '企業VP' },
     { key: 'product', label: '商品紹介' },
@@ -87,8 +85,6 @@ document.addEventListener('DOMContentLoaded', () => {
       setData(KEYS.categories, DEFAULT_CATEGORIES);
     }
   }
-  initCategories();
-
   function getCategories() {
     const cats = getData(KEYS.categories);
     return cats.length > 0 ? cats : DEFAULT_CATEGORIES;
@@ -843,6 +839,59 @@ document.addEventListener('DOMContentLoaded', () => {
     return div.innerHTML;
   }
 
+  // ============ DATA EXPORT / IMPORT ============
+  const btnExport = document.getElementById('btn-export-data');
+  const btnImport = document.getElementById('btn-import-data');
+  const fileInput = document.getElementById('file-import-data');
+
+  if (btnExport) {
+    btnExport.addEventListener('click', () => {
+      const data = {
+        works: DB.get('works'),
+        news: DB.get('news'),
+        categories: DB.get('categories'),
+        settings: DB.getSettings()
+      };
+      const json = JSON.stringify(data, null, 2);
+      const blob = new Blob([json], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'tatedouga-data-' + new Date().toISOString().split('T')[0] + '.json';
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('データをエクスポートしました', 'success');
+    });
+  }
+
+  if (btnImport && fileInput) {
+    btnImport.addEventListener('click', () => {
+      fileInput.click();
+    });
+
+    fileInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        try {
+          const data = JSON.parse(event.target.result);
+          if (data.works) DB.set('works', data.works);
+          if (data.news) DB.set('news', data.news);
+          if (data.categories) DB.set('categories', data.categories);
+          if (data.settings) DB.setSettings(data.settings);
+          showToast('データをインポートしました', 'success');
+          setTimeout(() => location.reload(), 1000);
+        } catch (err) {
+          showToast('データの読み込みに失敗しました', 'error');
+        }
+      };
+      reader.readAsText(file);
+      fileInput.value = '';
+    });
+  }
+
   // ============ RENDER ALL ============
   function renderAll() {
     CATEGORIES = getCategoryMap();
@@ -854,6 +903,53 @@ document.addEventListener('DOMContentLoaded', () => {
     renderSettings();
   }
 
-  renderAll();
+  // ============ AUTH ============
+  const auth = firebase.auth();
+  const loginScreen = document.getElementById('login-screen');
+  const loginBtn = document.getElementById('login-btn');
+  const loginError = document.getElementById('login-error');
+  const logoutBtn = document.getElementById('logout-btn');
+
+  // 認証状態を監視
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      // ログイン済み → 管理画面を表示
+      loginScreen.style.display = 'none';
+      DB.init()
+        .then(() => { initSampleData(); initCategories(); renderAll(); })
+        .catch(e => { console.error('[Admin] Firestore初期化失敗:', e); initSampleData(); initCategories(); renderAll(); });
+    } else {
+      // 未ログイン → ログイン画面を表示
+      loginScreen.style.display = 'flex';
+    }
+  });
+
+  // ログイン処理
+  loginBtn.addEventListener('click', async () => {
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-password').value;
+    loginError.style.display = 'none';
+    loginBtn.textContent = '認証中...';
+    loginBtn.disabled = true;
+    try {
+      await auth.signInWithEmailAndPassword(email, password);
+    } catch (e) {
+      loginError.style.display = 'block';
+      loginBtn.textContent = 'ログイン';
+      loginBtn.disabled = false;
+    }
+  });
+
+  // Enterキーでログイン
+  document.getElementById('login-password').addEventListener('keydown', e => {
+    if (e.key === 'Enter') loginBtn.click();
+  });
+
+  // ログアウト処理
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', () => {
+      auth.signOut();
+    });
+  }
 
 });

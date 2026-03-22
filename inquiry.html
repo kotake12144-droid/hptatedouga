@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>お見積り依頼・お問い合わせ | 株式会社タテドウガ</title>
+  <meta name="description" content="AI動画制作のお見積り依頼・お問い合わせページ。ご予算・納期に合わせて最適なプランをご提案いたします。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/inquiry.css">
+</head>
+<body>
+
+  <!-- ========== HEADER ========== -->
+  <header class="header is-scrolled" id="header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-main">TATEDOUGA</span>
+      </a>
+      <nav class="nav" id="nav">
+        <ul class="nav-list">
+          <li><a href="index.html#service">サービス</a></li>
+          <li><a href="index.html#works">実績</a></li>
+          <li><a href="index.html#pricing">料金</a></li>
+          <li><a href="flow.html">制作フロー</a></li>
+          <li><a href="about.html">会社概要</a></li>
+        </ul>
+        <a href="inquiry.html" class="nav-cta">CONTACT</a>
+      </nav>
+      <button class="hamburger" id="hamburger" aria-label="メニューを開く">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ========== PAGE HERO ========== -->
+  <section class="inq-hero">
+    <div class="container">
+      <h1 class="inq-hero-title">お見積り依頼・お問い合わせ</h1>
+      <span class="inq-hero-en">Contact / Estimate</span>
+    </div>
+  </section>
+
+  <!-- ========== FORM SECTION ========== -->
+  <section class="inq-section">
+    <div class="container">
+
+      <div class="inq-lead fade-in">
+        <p>AI動画制作に関するどのような内容でもお気軽にお問い合わせください。<br>弊社担当者より1営業日以内にご返信いたします。ご相談・お見積りはすべて無料です。</p>
+      </div>
+
+
+      <form class="inq-form fade-in" id="inq-form" action="#" method="post">
+
+        <div class="inq-form-row">
+          <label class="inq-label">お問い合わせ内容 <span class="inq-required">必須</span></label>
+          <select name="category" required class="inq-input inq-select">
+            <option value="">選択してください</option>
+            <option value="estimate">お見積り依頼</option>
+            <option value="pr">企業PR動画の制作</option>
+            <option value="brand">ブランドムービーの制作</option>
+            <option value="sns">SNS広告動画の制作</option>
+            <option value="consult">AI動画についての相談</option>
+            <option value="other">その他</option>
+          </select>
+        </div>
+
+        <div class="inq-form-row">
+          <label class="inq-label">お名前 <span class="inq-required">必須</span></label>
+          <input type="text" name="name" placeholder="例：山田 太郎" required class="inq-input">
+        </div>
+
+        <div class="inq-form-row">
+          <label class="inq-label">会社名 <span class="inq-required">必須</span></label>
+          <input type="text" name="company" placeholder="例：株式会社タテドウガ" required class="inq-input">
+        </div>
+
+        <div class="inq-form-row">
+          <label class="inq-label">メールアドレス <span class="inq-required">必須</span></label>
+          <input type="email" name="email" placeholder="例：info@tatedouga.com" required class="inq-input">
+        </div>
+
+        <div class="inq-form-row">
+          <label class="inq-label">電話番号 <span class="inq-required">必須</span></label>
+          <input type="tel" name="tel" placeholder="例：03-0000-0000" required class="inq-input">
+        </div>
+
+        <div class="inq-form-row">
+          <label class="inq-label">ご予算 <span class="inq-optional">任意</span></label>
+          <select name="budget" id="budget-select" class="inq-input inq-select">
+            <option value="">選択してください</option>
+            <optgroup label="単発プラン">
+              <option value="light">8万円〜（LIGHT）</option>
+              <option value="standard">25万円〜（STANDARD）</option>
+              <option value="premium">50万円〜（PREMIUM）</option>
+            </optgroup>
+            <optgroup label="サブスクプラン">
+              <option value="sub-starter">月額6万円〜（STARTER）</option>
+              <option value="sub-standard">月額28万円〜（STANDARD）</option>
+              <option value="sub-premium">月額58万円〜（PREMIUM）</option>
+            </optgroup>
+            <option value="undecided">未定・相談したい</option>
+          </select>
+        </div>
+
+        <div class="inq-form-row">
+          <label class="inq-label">ご希望納期 <span class="inq-optional">任意</span></label>
+          <select name="deadline" class="inq-input inq-select">
+            <option value="">選択してください</option>
+            <option value="asap">できるだけ早く（〜2週間）</option>
+            <option value="1month">1ヶ月以内</option>
+            <option value="2month">2ヶ月以内</option>
+            <option value="3month">3ヶ月以内</option>
+            <option value="undecided">未定・相談したい</option>
+          </select>
+        </div>
+
+        <div class="inq-form-row">
+          <label class="inq-label">ご検討中の動画についてお聞かせください <span class="inq-required">必須</span></label>
+          <textarea name="message" rows="6" required class="inq-input inq-textarea"
+            placeholder="例：採用向けの会社紹介動画を2分程度で制作したいです。AIを活用して費用を抑えたいと考えています。スケジュール感と費用感を教えてください。"></textarea>
+        </div>
+
+        <div class="inq-privacy">
+          <label class="inq-privacy-label">
+            <input type="checkbox" name="privacy" required class="inq-checkbox">
+            <span><a href="privacy.html" target="_blank" class="inq-link">プライバシーポリシー</a>に同意する</span>
+          </label>
+        </div>
+
+        <button type="submit" class="inq-submit">送信する</button>
+
+        <p class="inq-note">このフォームはSSLで暗号化されており、安全にご送信いただけます。</p>
+
+      </form>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a href="index.html" class="footer-logo">
+            <span class="footer-logo-text">TATEDOUGA</span>
+          </a>
+          <p class="footer-desc">AI動画制作に特化した映像プロダクション</p>
+        </div>
+        <div class="footer-nav">
+          <div class="footer-nav-col">
+            <h4>SERVICE</h4>
+            <ul>
+              <li><a href="index.html#service">AI動画生成</a></li>
+              <li><a href="index.html#service">AI企業VP・ブランドムービー</a></li>
+              <li><a href="index.html#service">AI × SNS広告動画</a></li>
+              <li><a href="index.html#service">AIモーショングラフィックス</a></li>
+              <li><a href="index.html#service">オリジナルキャラ × IP運用</a></li>
+            </ul>
+          </div>
+          <div class="footer-nav-col">
+            <h4>COMPANY</h4>
+            <ul>
+              <li><a href="about.html">会社概要</a></li>
+              <li><a href="index.html#works">制作実績</a></li>
+              <li><a href="privacy.html">プライバシーポリシー</a></li>
+            </ul>
+          </div>
+          <div class="footer-nav-col">
+            <h4>CONTACT</h4>
+            <ul>
+              <li><a href="inquiry.html">無料相談</a></li>
+              <li><a href="inquiry.html">お見積り</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 TATEDOUGA Inc. All Rights Reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ヘッダースクロール
+    const header = document.getElementById('header');
+    window.addEventListener('scroll', () => {
+      header.classList.toggle('scrolled', window.scrollY > 50);
+    });
+
+    // ハンバーガーメニュー
+    const hamburger = document.getElementById('hamburger');
+    const nav = document.getElementById('nav');
+    if (hamburger) {
+      hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('open');
+        nav.classList.toggle('open');
+      });
+    }
+
+    // フェードイン（CSSクラス名 is-visible に合わせる）
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('is-visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    // ========== フォーム送信 ==========
+    const inqForm = document.getElementById('inq-form');
+    const submitBtn = inqForm.querySelector('.inq-submit');
+
+    inqForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = '送信中...';
+
+      const formData = new FormData(inqForm);
+      const body = {
+        category: formData.get('category'),
+        name:     formData.get('name'),
+        company:  formData.get('company'),
+        email:    formData.get('email'),
+        phone:    formData.get('tel'),
+        budget:   formData.get('budget') || '',
+        deadline: formData.get('deadline') || '',
+        message:  formData.get('message')
+      };
+
+      try {
+        const res = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        if (!res.ok) throw new Error('server error');
+        inqForm.innerHTML = `
+          <div style="text-align:center;padding:3rem 1rem;">
+            <p style="font-size:1.5rem;font-weight:700;margin-bottom:1rem;">✓ 送信完了</p>
+            <p style="color:#555;line-height:1.8;">お問い合わせありがとうございます。<br>担当者より1営業日以内にご連絡いたします。</p>
+          </div>`;
+      } catch (err) {
+        console.error('送信エラー:', err);
+        submitBtn.disabled = false;
+        submitBtn.textContent = '送信する';
+        alert('送信に失敗しました。お手数ですが ai@tatedouga.jp まで直接ご連絡ください。');
+      }
+    });
+
+    // プラン情報
+    const planData = {
+      light:        { label: 'LIGHT（単発）',             budget: 'light',        category: 'estimate' },
+      standard:     { label: 'STANDARD（単発）',          budget: 'standard',     category: 'estimate' },
+      premium:      { label: 'PREMIUM（単発）',           budget: 'premium',      category: 'estimate' },
+      'sub-starter':  { label: 'STARTER（サブスク）',     budget: 'sub-starter',  category: 'estimate' },
+      'sub-standard': { label: 'STANDARD（サブスク）',    budget: 'sub-standard', category: 'estimate' },
+      'sub-premium':  { label: 'PREMIUM（サブスク）',     budget: 'sub-premium',  category: 'estimate' }
+    };
+
+    // URLパラメータ読み取り
+    const params = new URLSearchParams(window.location.search);
+    const plan = params.get('plan');
+
+    if (plan && planData[plan]) {
+      const data = planData[plan];
+
+      // ご予算 自動選択
+      const budgetSelect = document.getElementById('budget-select');
+      if (budgetSelect) {
+        const opt = budgetSelect.querySelector(`option[value="${data.budget}"]`);
+        if (opt) opt.selected = true;
+      }
+
+      // お問い合わせ内容 自動選択
+      const categorySelect = document.querySelector('select[name="category"]');
+      if (categorySelect) {
+        const opt = categorySelect.querySelector(`option[value="${data.category}"]`);
+        if (opt) opt.selected = true;
+      }
+
+      // プランバナー表示
+      const banner = document.getElementById('inq-plan-banner');
+      const labelEl = document.getElementById('inq-plan-label');
+      if (banner && labelEl) {
+        labelEl.textContent = data.label;
+        banner.style.display = 'block';
+      }
+
+      // ページタイトル変更
+      const heroTitle = document.querySelector('.inq-hero-title');
+      if (heroTitle) {
+        heroTitle.textContent = `お見積り依頼・お問い合わせ（${data.label}プラン）`;
+      }
+
+      // ブラウザタブのタイトル更新
+      document.title = `${data.label}プランのご相談 | 株式会社タテドウガ`;
+    }
+  </script>
+</body>
+</html>

@@ -2,3 +2,9 @@
 *.log
 node_modules/
 .env
+.env.local
+*.backup
+*.backup2
+*.backup3
+*.backup4
+*_original.mp4

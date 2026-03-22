@@ -22,14 +22,15 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   processShortVideos();
 
-  // ============ DATA LAYER ============
+  // ============ DATA LAYER (Firestore via DB) ============
   const KEYS = { works: 'td_works', news: 'td_news', inquiries: 'td_inquiries', settings: 'td_settings', categories: 'td_categories' };
 
   function getData(key) {
-    try { return JSON.parse(localStorage.getItem(key)) || []; } catch { return []; }
+    if (key === KEYS.settings) return DB.getSettings();
+    return DB.get(key.replace('td_', ''));
   }
   function getSettings() {
-    try { return JSON.parse(localStorage.getItem(KEYS.settings)) || {}; } catch { return {}; }
+    return DB.getSettings();
   }
 
   const DEFAULT_CATEGORIES = {
@@ -47,14 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   let CATEGORIES = getCategoryMap();
 
-  // ============ FIX OLD SAMPLE DATA ============
-  (function fixOldData() {
-    const works = getData(KEYS.works);
-    const oldIds = ['dQw4w9WgXcQ', 'jNQXAC9IVRw', 'EngW7tLk6R8', 'YE7VzlLtp-4', 'aqz-KE-bpKQ', 'LXb3EKWsInQ', 'YbJOTdZBX1g'];
-    if (works.some(w => oldIds.includes(w.videoId))) {
-      localStorage.removeItem(KEYS.works);
-    }
-  })();
 
   // ============ LOAD WORKS FROM ADMIN ============
   function loadWorks() {
@@ -207,7 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
         timestamp,
       });
 
-      localStorage.setItem(KEYS.inquiries, JSON.stringify(inquiries));
+      DB.set('inquiries', inquiries);
       form.reset();
 
       const btn = form.querySelector('button[type="submit"]');
@@ -812,15 +805,27 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ============ INIT ============
-  loadWorks();
-  loadNews();
-  loadSettings();
-  bindContactForm();
-  bindWorkCards();
-  bindWorksFilter();
-  initScrollAnimation();
-  initHeroAnimation();
-  initAITextAnimation();
-  checkHashOnLoad();
+  DB.init()
+    .then(() => {
+      loadWorks();
+      loadNews();
+      loadSettings();
+      bindContactForm();
+      bindWorkCards();
+      bindWorksFilter();
+      initScrollAnimation();
+      initHeroAnimation();
+      initAITextAnimation();
+      checkHashOnLoad();
+    })
+    .catch(e => {
+      console.error('[Main] Firestore初期化失敗:', e);
+      bindWorkCards();
+      bindWorksFilter();
+      initScrollAnimation();
+      initHeroAnimation();
+      initAITextAnimation();
+      checkHashOnLoad();
+    });
 
 });

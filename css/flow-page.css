@@ -1,0 +1,264 @@
+/* ==========================================
+   Flow Page - ご利用の流れ
+   ========================================== */
+
+/* Page Hero */
+.page-hero {
+  padding: 160px 0 60px;
+  text-align: center;
+  background: var(--gray-100);
+  color: var(--white);
+}
+.page-hero-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
+}
+.page-hero-en {
+  font-family: var(--font-en);
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--gray-700);
+  letter-spacing: 0.15em;
+}
+
+/* Back Button */
+.flow-back-btn-wrap {
+  padding: 20px 0 0;
+}
+.flow-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: var(--gray-400);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.flow-back-btn:hover {
+  color: var(--white);
+}
+
+/* Intro */
+.flow-page-intro {
+  padding: 56px 0;
+  text-align: center;
+}
+.flow-page-intro-text {
+  max-width: 760px;
+  margin: 0 auto;
+  font-size: 0.9rem;
+  color: var(--gray-300);
+  line-height: 2.2;
+}
+
+/* Step CTA Button */
+.flow-step-btn {
+  display: inline-block;
+  margin-top: 20px;
+}
+
+/* Steps */
+.flow-page-steps {
+  padding: 0 0 80px;
+}
+.flow-step {
+  max-width: 900px;
+  margin: 0 auto 40px;
+  position: relative;
+}
+.flow-step:last-child {
+  margin-bottom: 0;
+}
+.flow-step-num {
+  font-family: var(--font-en);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--gray-500);
+  letter-spacing: 0.08em;
+  margin-bottom: 12px;
+}
+.flow-step-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 32px;
+  background: #F5F5F5;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 36px 40px;
+}
+.flow-step--reverse .flow-step-content {
+  flex-direction: row-reverse;
+}
+.flow-step-icon {
+  flex-shrink: 0;
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gray-300);
+}
+.flow-step-icon svg {
+  width: 48px;
+  height: 48px;
+}
+.flow-step-body {
+  flex: 1;
+}
+.flow-step-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--gray-100);
+  margin-bottom: 12px;
+}
+.flow-step-body p {
+  font-size: 0.85rem;
+  color: var(--gray-500);
+  line-height: 2;
+  margin-bottom: 8px;
+}
+.flow-step-body p:last-child {
+  margin-bottom: 0;
+}
+
+/* Connector line between steps */
+.flow-step::after {
+  content: '';
+  display: block;
+  width: 1px;
+  height: 40px;
+  background: rgba(0, 0, 0, 0.1);
+  margin: 0 auto;
+  position: absolute;
+  bottom: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.flow-step:last-child::after {
+  display: none;
+}
+
+/* Schedule Section */
+.flow-page-schedule {
+  padding: 80px 0;
+  background: var(--white);
+}
+.flow-page-schedule-title {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--gray-100);
+  margin-bottom: 12px;
+}
+.flow-page-schedule-note {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--gray-500);
+  margin-bottom: 48px;
+  line-height: 1.8;
+}
+.schedule-block {
+  max-width: 760px;
+  margin: 0 auto 48px;
+}
+.schedule-block:last-child {
+  margin-bottom: 0;
+}
+.schedule-block-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--gray-100);
+  text-align: center;
+  padding: 14px 24px;
+  background: var(--gray-100);
+  color: var(--white);
+  margin-bottom: 0;
+}
+.schedule-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.schedule-table th,
+.schedule-table td {
+  padding: 12px 20px;
+  font-size: 0.82rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  text-align: left;
+}
+.schedule-table thead th {
+  background: #F5F5F5;
+  font-weight: 600;
+  color: var(--gray-300);
+  font-size: 0.78rem;
+}
+.schedule-table tbody td {
+  color: var(--gray-300);
+  background: var(--white);
+}
+.schedule-table tbody tr:hover td {
+  background: #FAFAFA;
+}
+
+/* CTA */
+.flow-page-cta {
+  padding: 80px 0;
+  background: var(--gray-100);
+}
+.flow-page-cta-inner {
+  text-align: center;
+}
+.flow-page-cta-inner h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 12px;
+}
+.flow-page-cta-inner p {
+  font-size: 0.9rem;
+  color: var(--gray-700);
+  margin-bottom: 32px;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 768px) {
+  .page-hero {
+    padding: 130px 0 48px;
+  }
+  .page-hero-title {
+    font-size: 1.3rem;
+  }
+  .flow-page-intro {
+    padding: 40px 0;
+  }
+  .flow-page-intro-text {
+    font-size: 0.85rem;
+  }
+  .flow-step-content {
+    flex-direction: column !important;
+    padding: 24px 20px;
+    gap: 16px;
+  }
+  .flow-step-icon {
+    width: 48px;
+    height: 48px;
+  }
+  .flow-step-icon svg {
+    width: 36px;
+    height: 36px;
+  }
+  .flow-step-title {
+    font-size: 1rem;
+  }
+  .flow-page-schedule-title {
+    font-size: 1.2rem;
+  }
+  .schedule-table th,
+  .schedule-table td {
+    padding: 10px 12px;
+    font-size: 0.75rem;
+  }
+  .flow-page-cta-inner h2 {
+    font-size: 1.2rem;
+  }
+}
