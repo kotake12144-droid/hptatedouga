@@ -102,6 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <span class="work-category-tag">${CATEGORIES[w.category] || w.category}</span>
           <h3 class="work-title">${escapeHtml(w.title)}</h3>
           ${w.description ? `<p class="work-desc">${escapeHtml(w.description.length > 70 ? w.description.slice(0, 70) + '…' : w.description)}</p>` : ''}
+          ${w.client ? `<p class="work-client">${escapeHtml(w.client)}</p>` : ''}
         </div>
       </div>
     `}).join('');

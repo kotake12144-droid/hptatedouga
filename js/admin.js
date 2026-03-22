@@ -453,6 +453,10 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
       </div>
       <div class="form-group">
+        <label>クライアント名（任意・入力すると表示されます）</label>
+        <input type="text" class="form-input" id="modal-work-client" value="${escapeHtml(data.client || '')}" placeholder="例: 株式会社○○（空白で非表示）">
+      </div>
+      <div class="form-group">
         <label>YouTube リンク *</label>
         <input type="text" class="form-input" id="modal-work-videoid" value="${escapeHtml(data.videoId || '')}" placeholder="例: https://youtu.be/oG0mrNqGZCw">
         <p style="font-size:0.75rem;color:var(--gray-500);margin-top:6px">YouTubeのURL（youtu.be/〜 や youtube.com/watch?v=〜）をそのまま貼り付けてください</p>
@@ -521,6 +525,7 @@ document.addEventListener('DOMContentLoaded', () => {
         id: maxId + 1,
         title,
         category: document.getElementById('modal-work-category').value,
+        client: document.getElementById('modal-work-client').value.trim(),
         videoId,
         duration: document.getElementById('modal-work-duration').value.trim(),
         thumbnail,
@@ -610,6 +615,7 @@ document.addEventListener('DOMContentLoaded', () => {
       openModal('制作実績を編集', workFormHTML(work), () => {
         work.title = document.getElementById('modal-work-title').value.trim();
         work.category = document.getElementById('modal-work-category').value;
+        work.client = document.getElementById('modal-work-client').value.trim();
         work.videoId = extractYouTubeId(document.getElementById('modal-work-videoid').value.trim());
         work.duration = document.getElementById('modal-work-duration').value.trim();
         work.thumbnail = document.getElementById('modal-work-thumb-url').value.trim();
