@@ -2268,7 +2268,7 @@ textarea.form-input { resize: vertical; }
   .work-info { padding: 16px; }
   .work-title { font-size: 0.85rem; }
   .work-card--sp-more { display: none; }
-  .works-grid .work-card:nth-child(n+7) { display: none !important; }
+  #works .works-grid .work-card:nth-child(n+7) { display: none !important; }
   /* モバイルでもショート動画を縦長表示 */
   .work-card--short {
     /* 横動画と同じサイズに統一 */
