@@ -259,7 +259,8 @@ document.addEventListener('DOMContentLoaded', () => {
     tbody.innerHTML = sorted.map((w, idx) => {
       const thumbSrc = w.thumbnail || (w.videoId ? `https://img.youtube.com/vi/${encodeURIComponent(w.videoId)}/mqdefault.jpg` : '');
       const isPinned = !!w.pinned;
-      const catLabel = CATEGORIES[w.category] || w.category;
+      const workCats = Array.isArray(w.categories) ? w.categories : (w.category ? [w.category] : []);
+      const catLabel = workCats.map(k => CATEGORIES[k] || k).join('・') || w.category;
 
       // Category group header
       let catHeader = '';
@@ -415,8 +416,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ============ WORKS CRUD ============
   function workFormHTML(data = {}) {
+    const selectedCats = Array.isArray(data.categories) ? data.categories : (data.category ? [data.category] : []);
     const cats = Object.entries(CATEGORIES).map(([k, v]) =>
-      `<option value="${k}" ${data.category === k ? 'selected' : ''}>${v}</option>`
+      `<label style="display:flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--border);border-radius:6px;cursor:pointer;font-size:0.85rem;color:var(--gray-100);transition:border-color 0.2s;${selectedCats.includes(k) ? 'border-color:var(--red);background:rgba(229,0,18,0.06);' : ''}">
+        <input type="checkbox" value="${k}" ${selectedCats.includes(k) ? 'checked' : ''} style="accent-color:var(--red);width:16px;height:16px;flex-shrink:0;">
+        ${v}
+      </label>`
     ).join('');
     const currentThumb = data.thumbnail || '';
     return `
@@ -442,15 +447,13 @@ document.addEventListener('DOMContentLoaded', () => {
         <label>タイトル *</label>
         <input type="text" class="form-input" id="modal-work-title" value="${escapeHtml(data.title || '')}" placeholder="大手IT企業 会社紹介映像">
       </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>カテゴリ *</label>
-          <select class="form-input" id="modal-work-category">${cats}</select>
-        </div>
-        <div class="form-group">
-          <label>再生時間</label>
-          <input type="text" class="form-input" id="modal-work-duration" value="${escapeHtml(data.duration || '')}" placeholder="3:24">
-        </div>
+      <div class="form-group">
+        <label>カテゴリ *（複数選択可）</label>
+        <div id="modal-work-categories" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px;">${cats}</div>
+      </div>
+      <div class="form-group">
+        <label>再生時間</label>
+        <input type="text" class="form-input" id="modal-work-duration" value="${escapeHtml(data.duration || '')}" placeholder="3:24">
       </div>
       <div class="form-group">
         <label>クライアント名（任意・入力すると表示されます）</label>
@@ -517,14 +520,17 @@ document.addEventListener('DOMContentLoaded', () => {
       const title = document.getElementById('modal-work-title').value.trim();
       const rawVideoInput = document.getElementById('modal-work-videoid').value.trim();
       const videoId = extractYouTubeId(rawVideoInput);
+      const categories = [...document.querySelectorAll('#modal-work-categories input:checked')].map(el => el.value);
       if (!title || !videoId) { showToast('タイトルとYouTubeリンクは必須です', 'error'); return; }
+      if (categories.length === 0) { showToast('カテゴリを1つ以上選択してください', 'error'); return; }
       const thumbnail = document.getElementById('modal-work-thumb-url').value.trim();
       const works = getData(KEYS.works);
       const maxId = works.reduce((m, w) => Math.max(m, w.id), 0);
       works.push({
         id: maxId + 1,
         title,
-        category: document.getElementById('modal-work-category').value,
+        categories,
+        category: categories[0],
         client: document.getElementById('modal-work-client').value.trim(),
         videoId,
         duration: document.getElementById('modal-work-duration').value.trim(),
@@ -614,7 +620,10 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!work) return;
       openModal('制作実績を編集', workFormHTML(work), () => {
         work.title = document.getElementById('modal-work-title').value.trim();
-        work.category = document.getElementById('modal-work-category').value;
+        const editCategories = [...document.querySelectorAll('#modal-work-categories input:checked')].map(el => el.value);
+        if (editCategories.length === 0) { showToast('カテゴリを1つ以上選択してください', 'error'); return; }
+        work.categories = editCategories;
+        work.category = editCategories[0];
         work.client = document.getElementById('modal-work-client').value.trim();
         work.videoId = extractYouTubeId(document.getElementById('modal-work-videoid').value.trim());
         work.duration = document.getElementById('modal-work-duration').value.trim();

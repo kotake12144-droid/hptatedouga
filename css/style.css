@@ -654,6 +654,12 @@ input, textarea, select { font-family: inherit; font-size: inherit; }
 }
 
 .work-info { padding: 28px 24px; }
+.work-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
 .work-category-tag {
   display: inline-block;
   font-size: 0.7rem; font-weight: 700;
@@ -661,7 +667,6 @@ input, textarea, select { font-family: inherit; font-size: inherit; }
   border: 1px solid rgba(229, 0, 18, 0.4);
   background: rgba(229, 0, 18, 0.08);
   padding: 4px 12px; border-radius: 3px;
-  margin-bottom: 12px;
 }
 .work-title {
   font-size: 1.05rem; font-weight: 700;

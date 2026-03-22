@@ -89,8 +89,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const vid = extractYouTubeId(w.videoId);
       const isShort = w.videoType === 'short';
       const shortClass = isShort ? 'work-card--short' : '';
+      const wCats = Array.isArray(w.categories) ? w.categories : (w.category ? [w.category] : []);
+      const tagsHtml = wCats.map(c => `<span class="work-category-tag">${escapeHtml(CATEGORIES[c] || c)}</span>`).join('');
       return `
-      <div class="work-card ${shortClass} fade-in is-visible" data-category="${w.category}" data-work-id="${w.id}" data-video-type="${w.videoType || 'normal'}">
+      <div class="work-card ${shortClass} fade-in is-visible" data-category="${wCats[0] || ''}" data-categories="${wCats.join(',')}" data-work-id="${w.id}" data-video-type="${w.videoType || 'normal'}">
         <div class="work-video-wrap">
           <div class="work-thumbnail" data-video-id="${escapeAttr(vid)}">
             <img class="work-thumb-img" src="${w.thumbnail || 'https://img.youtube.com/vi/' + vid + '/hqdefault.jpg'}" alt="${escapeHtml(w.title)}">
@@ -99,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
         </div>
         <div class="work-info">
-          <span class="work-category-tag">${CATEGORIES[w.category] || w.category}</span>
+          <div class="work-tags">${tagsHtml}</div>
           <h3 class="work-title">${escapeHtml(w.title)}</h3>
           ${w.description ? `<p class="work-desc">${escapeHtml(w.description.length > 70 ? w.description.slice(0, 70) + '…' : w.description)}</p>` : ''}
           ${w.client ? `<p class="work-client">${escapeHtml(w.client)}</p>` : ''}
@@ -571,7 +573,8 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.classList.add('is-active');
         const filter = btn.dataset.filter;
         workCards.forEach(card => {
-          if (filter === 'all' || card.dataset.category === filter) {
+          const cardCats = card.dataset.categories ? card.dataset.categories.split(',') : (card.dataset.category ? [card.dataset.category] : []);
+          if (filter === 'all' || cardCats.includes(filter)) {
             card.style.display = '';
             card.classList.remove('is-visible');
             requestAnimationFrame(() => requestAnimationFrame(() => card.classList.add('is-visible')));
