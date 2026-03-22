@@ -2253,8 +2253,18 @@ textarea.form-input { resize: vertical; }
   .genre-title { font-size: 0.78rem; }
   .genre-desc { font-size: 0.68rem; }
   .genre-section { margin-top: 48px; padding-top: 40px; }
-  .works-filter { gap: 6px; margin-bottom: 32px; }
-  .filter-btn { padding: 8px 14px; font-size: 0.7rem; }
+  .works-filter {
+    gap: 6px;
+    margin-bottom: 32px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    justify-content: flex-start;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+  }
+  .works-filter::-webkit-scrollbar { display: none; }
+  .filter-btn { padding: 8px 14px; font-size: 0.7rem; flex-shrink: 0; white-space: nowrap; }
   .work-info { padding: 16px; }
   .work-title { font-size: 0.85rem; }
   .work-card--sp-more { display: none; }
