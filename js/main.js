@@ -373,7 +373,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function openWorkDetailFromData(work) {
     const vid = extractYouTubeId(work.videoId);
+    const wCats = Array.isArray(work.categories) ? work.categories : (work.category ? [work.category] : []);
     const categoryLabel = CATEGORIES[work.category] || work.category;
+    const detailTagsHtml = wCats.map(c => `<span class="work-detail-category">${escapeHtml(CATEGORIES[c] || c)}</span>`).join('');
     const allWorks = getAllWorks();
     const related = allWorks
       .filter(w => w.category === work.category && String(w.id) !== String(work.id))
@@ -390,7 +392,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Meta
     html += `<div class="work-detail-meta">
-      <span class="work-detail-category">${escapeHtml(categoryLabel)}</span>
+      <div class="work-detail-tags">${detailTagsHtml || `<span class="work-detail-category">${escapeHtml(categoryLabel)}</span>`}</div>
       <h1 class="work-detail-title">${escapeHtml(work.title)}</h1>
       <div class="work-detail-info-row">
         ${work.client ? `<span class="work-detail-info-item">

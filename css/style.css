@@ -2521,6 +2521,12 @@ body.work-detail-open { overflow: hidden; }
   margin: 0 auto;
   padding: 32px 24px 0;
 }
+.work-detail-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 16px;
+}
 .work-detail-category {
   display: inline-block;
   font-size: 0.7rem;
@@ -2530,7 +2536,6 @@ body.work-detail-open { overflow: hidden; }
   border: 1px solid rgba(229, 0, 18, 0.25);
   padding: 4px 14px;
   border-radius: 2px;
-  margin-bottom: 16px;
 }
 .work-detail-title {
   font-size: 1.8rem;
