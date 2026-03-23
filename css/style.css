@@ -656,10 +656,9 @@ input, textarea, select { font-family: inherit; font-size: inherit; }
 .work-info { padding: 28px 24px; }
 .work-tags {
   display: flex;
-  flex-wrap: nowrap;
-  gap: 4px;
-  margin-bottom: 10px;
-  overflow: hidden;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
 }
 .work-category-tag {
   display: inline-block;
@@ -668,7 +667,6 @@ input, textarea, select { font-family: inherit; font-size: inherit; }
   border: 1px solid rgba(229, 0, 18, 0.4);
   background: rgba(229, 0, 18, 0.08);
   padding: 4px 12px; border-radius: 3px;
-  white-space: nowrap;
 }
 .work-title {
   font-size: 1.05rem; font-weight: 700;
@@ -2282,8 +2280,8 @@ textarea.form-input { resize: vertical; }
   .filter-btn { padding: 8px 14px; font-size: 0.7rem; flex-shrink: 0; white-space: nowrap; }
   .work-info { padding: 16px; }
   .work-title { font-size: 0.85rem; }
-  .work-tags { gap: 3px; margin-bottom: 8px; }
-  .work-category-tag { font-size: 0.6rem; padding: 3px 7px; letter-spacing: 0.04em; }
+  .work-tags { flex-wrap: nowrap; overflow: hidden; gap: 3px; margin-bottom: 8px; }
+  .work-category-tag { font-size: 0.6rem; padding: 3px 7px; letter-spacing: 0.04em; white-space: nowrap; }
   .work-card--sp-more { display: none; }
   #works .works-grid .work-card:nth-child(n+7) { display: none !important; }
   /* モバイルでもショート動画を縦長表示 */
