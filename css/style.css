@@ -653,20 +653,20 @@ input, textarea, select { font-family: inherit; font-size: inherit; }
   transform: translateY(-1px);
 }
 
-.work-info { padding: 28px 24px; }
+.work-info { padding: 14px 16px; }
 .work-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  margin-bottom: 12px;
+  gap: 5px;
+  margin-bottom: 10px;
 }
 .work-category-tag {
   display: inline-block;
-  font-size: 0.7rem; font-weight: 700;
-  color: var(--red); letter-spacing: 0.08em;
+  font-size: 0.62rem; font-weight: 700;
+  color: var(--red); letter-spacing: 0.06em;
   border: 1px solid rgba(229, 0, 18, 0.4);
   background: rgba(229, 0, 18, 0.08);
-  padding: 4px 12px; border-radius: 3px;
+  padding: 3px 9px; border-radius: 3px;
 }
 .work-title {
   font-size: 1.05rem; font-weight: 700;
