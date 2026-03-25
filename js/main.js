@@ -70,20 +70,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const grid = document.querySelector('.works-grid');
     if (!grid) return;
 
-    // Sort: within each category, pinned first (by sortOrder)
-    const catOrder = getData(KEYS.categories).map(c => c.key);
-    works.sort((a, b) => {
-      const aCat = catOrder.indexOf(a.category);
-      const bCat = catOrder.indexOf(b.category);
-      const aCatIdx = aCat >= 0 ? aCat : 999;
-      const bCatIdx = bCat >= 0 ? bCat : 999;
-      if (aCatIdx !== bCatIdx) return aCatIdx - bCatIdx;
-      const ap = a.pinned ? 1 : 0;
-      const bp = b.pinned ? 1 : 0;
-      if (ap !== bp) return bp - ap;
-      if (ap && bp) return (a.sortOrder || 0) - (b.sortOrder || 0);
-      return 0;
-    });
+    // Sort: global displayOrder
+    works.sort((a, b) => (a.displayOrder || 999) - (b.displayOrder || 999));
 
     grid.innerHTML = works.map(w => {
       const vid = extractYouTubeId(w.videoId);
@@ -342,17 +330,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function getAllWorks() {
     const stored = getData(KEYS.works);
     const list = stored.length > 0 ? stored : Object.values(STATIC_WORKS);
-    const catOrder = getData(KEYS.categories).map(c => c.key);
-    return [...list].sort((a, b) => {
-      const aCatIdx = catOrder.indexOf(a.category) >= 0 ? catOrder.indexOf(a.category) : 999;
-      const bCatIdx = catOrder.indexOf(b.category) >= 0 ? catOrder.indexOf(b.category) : 999;
-      if (aCatIdx !== bCatIdx) return aCatIdx - bCatIdx;
-      const ap = a.pinned ? 1 : 0;
-      const bp = b.pinned ? 1 : 0;
-      if (ap !== bp) return bp - ap;
-      if (ap && bp) return (a.sortOrder || 0) - (b.sortOrder || 0);
-      return 0;
-    });
+    return [...list].sort((a, b) => (a.displayOrder || 999) - (b.displayOrder || 999));
   }
 
   function findWork(workId) {
@@ -377,9 +355,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const categoryLabel = CATEGORIES[work.category] || work.category;
     const detailTagsHtml = wCats.map(c => `<span class="work-detail-category">${escapeHtml(CATEGORIES[c] || c)}</span>`).join('');
     const allWorks = getAllWorks();
-    const related = allWorks
-      .filter(w => w.category === work.category && String(w.id) !== String(work.id))
+    const thisCats = Array.isArray(work.categories) ? work.categories : (work.category ? [work.category] : []);
+    let related = allWorks
+      .filter(w => {
+        if (String(w.id) === String(work.id)) return false;
+        const wCats = Array.isArray(w.categories) ? w.categories : (w.category ? [w.category] : []);
+        return wCats.some(c => thisCats.includes(c));
+      })
       .slice(0, 3);
+    // 同カテゴリが足りない場合は他カテゴリから補完
+    if (related.length < 3) {
+      const relatedIds = new Set(related.map(r => String(r.id)));
+      const fallback = allWorks
+        .filter(w => String(w.id) !== String(work.id) && !relatedIds.has(String(w.id)))
+        .slice(0, 3 - related.length);
+      related = [...related, ...fallback];
+    }
 
     let html = '';
 

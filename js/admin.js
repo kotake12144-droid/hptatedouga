@@ -154,9 +154,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   modalClose.addEventListener('click', closeModal);
   modalCancel.addEventListener('click', closeModal);
-  modalOverlay.addEventListener('click', (e) => {
-    if (e.target === modalOverlay) closeModal();
-  });
   modalSave.addEventListener('click', () => {
     if (currentModalCallback) currentModalCallback();
   });
@@ -215,29 +212,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // ============ SORT WORKS (by category group, pinned first within each) ============
+  // ============ SORT WORKS (global displayOrder) ============
   function getSortedWorks(works) {
-    const catOrder = getCategories().map(c => c.key);
-    return [...works].sort((a, b) => {
-      // 1. Category group order
-      const aCat = catOrder.indexOf(a.category);
-      const bCat = catOrder.indexOf(b.category);
-      const aCatIdx = aCat >= 0 ? aCat : 999;
-      const bCatIdx = bCat >= 0 ? bCat : 999;
-      if (aCatIdx !== bCatIdx) return aCatIdx - bCatIdx;
-      // 2. Pinned first within same category
-      const aPinned = a.pinned ? 1 : 0;
-      const bPinned = b.pinned ? 1 : 0;
-      if (aPinned !== bPinned) return bPinned - aPinned;
-      // 3. Sort by sortOrder among pinned
-      if (aPinned && bPinned) return (a.sortOrder || 0) - (b.sortOrder || 0);
-      return 0;
+    // Auto-assign displayOrder to works that don't have it
+    let maxOrder = works.reduce((m, w) => Math.max(m, w.displayOrder || 0), 0);
+    works.forEach(w => {
+      if (!w.displayOrder) {
+        maxOrder += 10;
+        w.displayOrder = maxOrder;
+      }
     });
-  }
-
-  // Get pinned works within same category (for arrow enable/disable)
-  function getPinnedInCategory(sorted, category) {
-    return sorted.filter(w => w.pinned && w.category === category);
+    return [...works].sort((a, b) => (a.displayOrder || 999) - (b.displayOrder || 999));
   }
 
   // ============ RENDER: WORKS ============
@@ -254,44 +239,24 @@ document.addEventListener('DOMContentLoaded', () => {
     empty.style.display = 'none';
 
     const sorted = getSortedWorks(works);
-    let lastCategory = null;
 
     tbody.innerHTML = sorted.map((w, idx) => {
       const thumbSrc = w.thumbnail || (w.videoId ? `https://img.youtube.com/vi/${encodeURIComponent(w.videoId)}/mqdefault.jpg` : '');
-      const isPinned = !!w.pinned;
       const workCats = Array.isArray(w.categories) ? w.categories : (w.category ? [w.category] : []);
       const catLabel = workCats.map(k => CATEGORIES[k] || k).join('・') || w.category;
+      const isFirst = idx === 0;
+      const isLast = idx === sorted.length - 1;
 
-      // Category group header
-      let catHeader = '';
-      if (w.category !== lastCategory) {
-        lastCategory = w.category;
-        catHeader = `<tr><td colspan="6" style="padding:14px 16px 6px;font-size:0.75rem;font-weight:600;color:var(--red);letter-spacing:0.08em;border-bottom:1px solid rgba(229,0,18,0.15);background:rgba(229,0,18,0.02);">${escapeHtml(catLabel)}</td></tr>`;
-      }
-
-      // Pin up/down within category
-      const pinnedInCat = getPinnedInCategory(sorted, w.category);
-      const pinnedIdx = pinnedInCat.findIndex(p => p.id === w.id);
-      const isFirstPinned = pinnedIdx === 0;
-      const isLastPinned = pinnedIdx === pinnedInCat.length - 1;
-
-      const row = `
-      <tr style="${isPinned ? 'background:rgba(229,0,18,0.04);' : ''}">
-        <td style="text-align:center">
-          ${isPinned
-            ? `<div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
-                <button class="table-btn-pin is-pinned" onclick="adminApp.unpinWork(${w.id})" title="固定を解除">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--red)" stroke="var(--red)" stroke-width="2"><path d="M12 2l2.09 6.26L21 9.27l-5 3.89L17.18 20 12 16.77 6.82 20 8 13.16l-5-3.89 6.91-1.01z"/></svg>
-                </button>
-                <div style="display:flex;gap:1px;">
-                  <button class="table-btn-arrow${isFirstPinned ? ' is-disabled' : ''}" onclick="adminApp.moveWork(${w.id},'up')" title="上へ"${isFirstPinned ? ' disabled' : ''}>&#9650;</button>
-                  <button class="table-btn-arrow${isLastPinned ? ' is-disabled' : ''}" onclick="adminApp.moveWork(${w.id},'down')" title="下へ"${isLastPinned ? ' disabled' : ''}>&#9660;</button>
-                </div>
-              </div>`
-            : `<button class="table-btn-pin" onclick="adminApp.pinWork(${w.id})" title="このジャンル内で上に固定">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gray-500)" stroke-width="2"><path d="M12 2l2.09 6.26L21 9.27l-5 3.89L17.18 20 12 16.77 6.82 20 8 13.16l-5-3.89 6.91-1.01z"/></svg>
-              </button>`
-          }
+      return `
+      <tr>
+        <td style="text-align:center;white-space:nowrap">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+            <span style="font-family:var(--font-en);font-size:0.75rem;font-weight:700;color:var(--red);line-height:1">${idx + 1}</span>
+            <div style="display:flex;gap:1px;">
+              <button class="table-btn-arrow${isFirst ? ' is-disabled' : ''}" onclick="adminApp.moveWork(${w.id},'up')" title="上へ"${isFirst ? ' disabled' : ''}>&#9650;</button>
+              <button class="table-btn-arrow${isLast ? ' is-disabled' : ''}" onclick="adminApp.moveWork(${w.id},'down')" title="下へ"${isLast ? ' disabled' : ''}>&#9660;</button>
+            </div>
+          </div>
         </td>
         <td>
           <div class="table-thumb">
@@ -308,7 +273,6 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
         </td>
       </tr>`;
-      return catHeader + row;
     }).join('');
   }
 
@@ -526,6 +490,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const thumbnail = document.getElementById('modal-work-thumb-url').value.trim();
       const works = getData(KEYS.works);
       const maxId = works.reduce((m, w) => Math.max(m, w.id), 0);
+      const maxOrder = works.reduce((m, w) => Math.max(m, w.displayOrder || 0), 0);
       works.push({
         id: maxId + 1,
         title,
@@ -537,6 +502,7 @@ document.addEventListener('DOMContentLoaded', () => {
         thumbnail,
         description: document.getElementById('modal-work-description').value.trim(),
         points: document.getElementById('modal-work-points').value.trim(),
+        displayOrder: maxOrder + 10,
       });
       setData(KEYS.works, works);
       closeModal();
@@ -647,46 +613,18 @@ document.addEventListener('DOMContentLoaded', () => {
       showToast('制作実績を削除しました');
     },
 
-    pinWork(id) {
-      const works = getData(KEYS.works);
-      const work = works.find(w => w.id === id);
-      if (!work) return;
-      // Find max sortOrder among pinned IN SAME CATEGORY
-      const maxOrder = works.filter(w => w.pinned && w.category === work.category).reduce((m, w) => Math.max(m, w.sortOrder || 0), 0);
-      work.pinned = true;
-      work.sortOrder = maxOrder + 1;
-      setData(KEYS.works, works);
-      renderAll();
-      showToast(`「${CATEGORIES[work.category] || work.category}」内で上に固定しました`);
-    },
-
-    unpinWork(id) {
-      const works = getData(KEYS.works);
-      const work = works.find(w => w.id === id);
-      if (!work) return;
-      work.pinned = false;
-      work.sortOrder = 0;
-      setData(KEYS.works, works);
-      renderAll();
-      showToast('固定を解除しました');
-    },
-
     moveWork(id, direction) {
       const works = getData(KEYS.works);
-      const work = works.find(w => w.id === id);
-      if (!work) return;
-      // Only move within same category's pinned items
       const sorted = getSortedWorks(works);
-      const pinnedInCat = sorted.filter(w => w.pinned && w.category === work.category);
-      const idx = pinnedInCat.findIndex(w => w.id === id);
+      const idx = sorted.findIndex(w => w.id === id);
       if (idx < 0) return;
       const swapIdx = direction === 'up' ? idx - 1 : idx + 1;
-      if (swapIdx < 0 || swapIdx >= pinnedInCat.length) return;
-      const a = works.find(w => w.id === pinnedInCat[idx].id);
-      const b = works.find(w => w.id === pinnedInCat[swapIdx].id);
-      const tmp = a.sortOrder;
-      a.sortOrder = b.sortOrder;
-      b.sortOrder = tmp;
+      if (swapIdx < 0 || swapIdx >= sorted.length) return;
+      const a = works.find(w => w.id === sorted[idx].id);
+      const b = works.find(w => w.id === sorted[swapIdx].id);
+      const tmp = a.displayOrder;
+      a.displayOrder = b.displayOrder;
+      b.displayOrder = tmp;
       setData(KEYS.works, works);
       renderAll();
     },
@@ -836,9 +774,6 @@ document.addEventListener('DOMContentLoaded', () => {
   modalCancel.removeEventListener('click', closeModal);
   modalClose.addEventListener('click', closeModalReset);
   modalCancel.addEventListener('click', closeModalReset);
-  modalOverlay.addEventListener('click', (e) => {
-    if (e.target === modalOverlay) closeModalReset();
-  });
 
   // ============ UTILITY ============
   function escapeHtml(str) {
