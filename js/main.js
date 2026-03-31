@@ -546,11 +546,12 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.work-card').forEach(card => {
       if (card.dataset.cardBound) return;
       card.dataset.cardBound = '1';
+      card.style.cursor = 'pointer';
       card.addEventListener('click', (e) => {
         e.preventDefault();
         const workId = card.dataset.workId;
         if (workId) {
-          openWorkDetail(workId);
+          window.location.href = '/works/' + workId;
         }
       });
     });

@@ -248,9 +248,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const isLast = idx === sorted.length - 1;
 
       return `
-      <tr>
+      <tr draggable="true" data-work-id="${w.id}">
         <td style="text-align:center;white-space:nowrap">
           <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+            <span class="drag-handle" title="ドラッグして並び替え">&#8942;&#8942;</span>
             <span style="font-family:var(--font-en);font-size:0.75rem;font-weight:700;color:var(--red);line-height:1">${idx + 1}</span>
             <div style="display:flex;gap:1px;">
               <button class="table-btn-arrow${isFirst ? ' is-disabled' : ''}" onclick="adminApp.moveWork(${w.id},'up')" title="上へ"${isFirst ? ' disabled' : ''}>&#9650;</button>
@@ -274,6 +275,64 @@ document.addEventListener('DOMContentLoaded', () => {
         </td>
       </tr>`;
     }).join('');
+
+    bindDragDrop();
+  }
+
+  // ============ DRAG & DROP ============
+  function bindDragDrop() {
+    const tbody = document.getElementById('works-tbody');
+    if (!tbody) return;
+    let dragSrcId = null;
+
+    tbody.querySelectorAll('tr[data-work-id]').forEach(row => {
+      row.addEventListener('dragstart', (e) => {
+        dragSrcId = row.dataset.workId;
+        row.classList.add('is-dragging');
+        e.dataTransfer.effectAllowed = 'move';
+      });
+
+      row.addEventListener('dragend', () => {
+        row.classList.remove('is-dragging');
+        tbody.querySelectorAll('tr').forEach(r => r.classList.remove('drag-over'));
+      });
+
+      row.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        tbody.querySelectorAll('tr').forEach(r => r.classList.remove('drag-over'));
+        row.classList.add('drag-over');
+      });
+
+      row.addEventListener('dragleave', (e) => {
+        if (!row.contains(e.relatedTarget)) row.classList.remove('drag-over');
+      });
+
+      row.addEventListener('drop', (e) => {
+        e.preventDefault();
+        row.classList.remove('drag-over');
+        const targetId = row.dataset.workId;
+        if (!dragSrcId || dragSrcId === targetId) return;
+
+        const works = getData(KEYS.works);
+        const sorted = getSortedWorks([...works]);
+        const srcIdx = sorted.findIndex(w => String(w.id) === String(dragSrcId));
+        const tgtIdx = sorted.findIndex(w => String(w.id) === String(targetId));
+        if (srcIdx < 0 || tgtIdx < 0) return;
+
+        // Move src to tgt position and reassign displayOrder
+        const [moved] = sorted.splice(srcIdx, 1);
+        sorted.splice(tgtIdx, 0, moved);
+        sorted.forEach((w, i) => {
+          const work = works.find(wk => String(wk.id) === String(w.id));
+          if (work) work.displayOrder = (i + 1) * 10;
+        });
+
+        setData(KEYS.works, works);
+        renderAll();
+        showToast('順位を変更しました');
+      });
+    });
   }
 
   // ============ RENDER: NEWS ============

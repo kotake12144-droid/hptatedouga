@@ -1,5 +1,7 @@
 {
   "rewrites": [
-    { "source": "/thanks", "destination": "/thanks.html" }
+    { "source": "/thanks", "destination": "/thanks.html" },
+    { "source": "/sitemap.xml", "destination": "/api/sitemap" },
+    { "source": "/works/:id", "destination": "/work.html" }
   ]
 }

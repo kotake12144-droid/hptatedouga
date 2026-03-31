@@ -11,9 +11,9 @@
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI×企画力で動画が変わる｜AI動画制作特化の映像プロダクション</title>
+  <title>【法人向け】AI映像制作会社｜採用/VP/CM/SNS広告動画</title>
   <meta name="description" content="企画力×最先端生成AIで、予算を抑えながら本物のクオリティを。企業VP・SNS広告・ゲームPR。無料相談・お見積り随時受付。">
-  <meta property="og:title" content="AI×企画力で動画が変わる｜AI動画制作特化の映像プロダクション">
+  <meta property="og:title" content="【法人向け】AI映像制作会社｜採用/VP/CM/SNS広告動画">
   <meta property="og:description" content="企画力×最先端生成AIで、予算を抑えながら本物のクオリティを。企業VP・SNS広告・ゲームPR。無料相談・お見積り随時受付。">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="株式会社タテドウガ">
@@ -22,6 +22,14 @@
   <meta name="twitter:card" content="summary">
   <meta name="twitter:image" content="https://www.tatedouga.jp/images/og-image.png">
   <meta name="google-site-verification" content="RWF9e0RavRyW4FxP79FwwUJQfIoDXMPvkDPMa_Ox5RI">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "株式会社タテドウガ",
+    "url": "https://www.tatedouga.jp/"
+  }
+  </script>
   <link rel="icon" href="/images/favicon.png" type="image/png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -63,7 +71,7 @@
         <source src="images/ヒーロー映像２.mp4" type="video/mp4">
       </video>
       <!-- モバイル用背景動画 -->
-      <video class="hero-video hero-video-mobile" autoplay muted loop playsinline preload="metadata">
+      <video class="hero-video hero-video-mobile" autoplay muted loop playsinline preload="auto" poster="images/hero-poster.png">
         <source src="images/ヒーロー モバイル.mp4" type="video/mp4">
       </video>
       <div class="hero-overlay"></div>
@@ -97,10 +105,11 @@
       <!-- Works Filter -->
       <div class="works-filter fade-in">
         <button class="filter-btn is-active" data-filter="all">ALL</button>
-        <button class="filter-btn" data-filter="corporate">企業PR</button>
+        <button class="filter-btn" data-filter="corporate">企業VP</button>
         <button class="filter-btn" data-filter="product">商品紹介</button>
-        <button class="filter-btn" data-filter="game">ゲーム関連</button>
-        <button class="filter-btn" data-filter="creative">クリエイティブ映像</button>
+        <button class="filter-btn" data-filter="recruit">採用動画</button>
+        <button class="filter-btn" data-filter="sns">SNS広告</button>
+        <button class="filter-btn" data-filter="anime">アニメーション</button>
       </div>
 
       <!-- Works Grid with YouTube embeds -->
@@ -470,7 +479,7 @@
               </div>
               <div class="feature-process-step">
                 <div class="feature-process-media">
-                  <video src="images/feature03-process-video.mp4" autoplay muted loop playsinline></video>
+                  <video src="images/feature03-process-video.mp4" autoplay muted loop playsinline preload="auto"></video>
                 </div>
                 <div class="feature-process-label">
                   <span class="feature-process-num">03</span>
@@ -535,7 +544,7 @@
             <p>Sora・Runway・Kling等の最先端AIモデルを駆使したAI映像クリエイターが、テキストや画像からハイクオリティな映像を制作。案件の目的に応じて最適なAIツールを選定し、従来不可能だった表現を実現します。プロのクリエイターがAIを使いこなすことで、信頼性の高い映像制作会社として選ばれ続けています。</p>
           </div>
           <div class="service-point-visual service-point-visual--video">
-            <video src="images/point1-video.mp4" autoplay muted loop playsinline></video>
+            <video src="images/point1-video.mp4" autoplay muted loop playsinline preload="auto"></video>
           </div>
         </div>
 
@@ -547,7 +556,7 @@
             <p>単にAIに映像を生成させるだけでなく、経験豊富なAI映像クリエイターが構成・演出・編集まで一貫して担当。最新AIツールを使いこなした高い専門性と豊富な制作経験を持つクリエイターが、クオリティの高い映像を追求します。AIの可能性を最大限に引き出した、唯一無二の映像をお届けします。</p>
           </div>
           <div class="service-point-visual service-point-visual--video">
-            <video src="images/point2-video.mp4" autoplay muted loop playsinline></video>
+            <video src="images/point2-video.mp4" autoplay muted loop playsinline preload="auto"></video>
           </div>
         </div>
 
@@ -1252,6 +1261,42 @@
     <div id="work-detail-body"></div>
   </div>
 
+  <!-- Video autoplay fix for mobile -->
+  <script>
+  (function() {
+    function initVideoAutoplay() {
+      // Hero video: play the visible one immediately
+      var isMobile = window.matchMedia('(max-width: 768px)').matches;
+      var heroVideo = document.querySelector(isMobile ? '.hero-video-mobile' : '.hero-video-desktop');
+      if (heroVideo && heroVideo.paused) {
+        heroVideo.play().catch(function() {});
+      }
+
+      // All other autoplay videos: play when they scroll into view
+      var videos = document.querySelectorAll('video[autoplay]:not(.hero-video)');
+      if ('IntersectionObserver' in window) {
+        var observer = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            var v = entry.target;
+            if (entry.isIntersecting && v.paused) {
+              v.play().catch(function() {});
+            }
+          });
+        }, { threshold: 0.25 });
+        videos.forEach(function(v) { observer.observe(v); });
+      } else {
+        // Fallback: just play all
+        videos.forEach(function(v) { v.play().catch(function() {}); });
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initVideoAutoplay);
+    } else {
+      initVideoAutoplay();
+    }
+  })();
+  </script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
   <script src="js/firebase-db.js"></script>

@@ -8,3 +8,4 @@ node_modules/
 *.backup3
 *.backup4
 *_original.mp4
+.vercel
