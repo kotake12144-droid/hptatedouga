@@ -140,6 +140,41 @@ document.addEventListener('DOMContentLoaded', () => {
     setMeta('meta[property="og:description"]', descText);
     setMeta('meta[property="og:image"]', thumbUrl);
     setMeta('meta[property="og:url"]', pageUrl);
+    setMeta('meta[name="twitter:title"]', titleText);
+    setMeta('meta[name="twitter:description"]', descText);
+    setMeta('meta[name="twitter:image"]', thumbUrl);
+
+    const canonicalEl = document.querySelector('link[rel="canonical"]');
+    if (canonicalEl) canonicalEl.setAttribute('href', pageUrl);
+
+    // JSON-LD: VideoObject + BreadcrumbList
+    const ld = {
+      '@context': 'https://schema.org',
+      '@graph': [
+        {
+          '@type': 'VideoObject',
+          'name': work.title,
+          'description': descText,
+          'thumbnailUrl': thumbUrl,
+          'uploadDate': work.createdAt ? new Date(work.createdAt).toISOString().split('T')[0] : undefined,
+          'embedUrl': vid ? 'https://www.youtube.com/embed/' + vid : undefined,
+          'url': pageUrl,
+          'publisher': { '@id': 'https://www.tatedouga.jp/#organization' }
+        },
+        {
+          '@type': 'BreadcrumbList',
+          'itemListElement': [
+            { '@type': 'ListItem', 'position': 1, 'name': 'ホーム', 'item': 'https://www.tatedouga.jp/' },
+            { '@type': 'ListItem', 'position': 2, 'name': '制作実績', 'item': 'https://www.tatedouga.jp/works.html' },
+            { '@type': 'ListItem', 'position': 3, 'name': work.title, 'item': pageUrl }
+          ]
+        }
+      ]
+    };
+    const ldScript = document.createElement('script');
+    ldScript.type = 'application/ld+json';
+    ldScript.textContent = JSON.stringify(ld);
+    document.head.appendChild(ldScript);
 
     // Related works
     const allWorks = getAllWorks();
