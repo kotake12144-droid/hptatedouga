@@ -30,20 +30,24 @@ module.exports = async function handler(req, res) {
   const today = new Date().toISOString().split('T')[0];
   let workUrls = [];
 
-  try {
-    const url = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/meta/works?key=${API_KEY}`;
-    const data = await httpsGet(url);
-    const values = data?.fields?.items?.arrayValue?.values || [];
-    workUrls = values
-      .map(v => {
-        const f = v?.mapValue?.fields;
-        if (!f) return null;
-        const id = f.id?.integerValue || f.id?.stringValue;
-        return id ? { url: `/works/${id}`, priority: '0.8', changefreq: 'monthly' } : null;
-      })
-      .filter(Boolean);
-  } catch (e) {
-    console.error('[sitemap] Firestore fetch failed:', e);
+  const url = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/meta/works?key=${API_KEY}`;
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      const data = await httpsGet(url);
+      const values = data?.fields?.items?.arrayValue?.values || [];
+      workUrls = values
+        .map(v => {
+          const f = v?.mapValue?.fields;
+          if (!f) return null;
+          const id = f.id?.integerValue || f.id?.stringValue;
+          return id ? { url: `/works/${id}`, priority: '0.8', changefreq: 'monthly' } : null;
+        })
+        .filter(Boolean);
+      break;
+    } catch (e) {
+      console.error(`[sitemap] Firestore fetch failed (attempt ${attempt}):`, e);
+      if (attempt < 3) await new Promise(r => setTimeout(r, 500));
+    }
   }
 
   const allPages = [...STATIC_PAGES, ...workUrls];
